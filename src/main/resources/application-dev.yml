@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:mysql://host.tanhuiri.cn:3306/metro?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password:
+    type: com.alibaba.druid.pool.DruidDataSource   #配置阿里巴巴的Druid数据源
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

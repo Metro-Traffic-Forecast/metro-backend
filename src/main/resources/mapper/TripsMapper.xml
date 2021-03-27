@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.whu.metro.mapper.TripsMapper">
+
+    <resultMap id="StatisticInfoDTO" type="cn.edu.whu.metro.dto.StatisticInfoDTO">
+        <result property="average" column="average"/>
+        <result property="standError" column="std_error"/>
+    </resultMap>
+
+    <select id="queryAverageTimeBetweenStations" resultMap="StatisticInfoDTO">
+        SELECT AVG(duration) AS average, STDDEV(duration) AS std_error FROM trips
+        WHERE station_in IN (#{station1}, #{station2})
+        AND station_out IN (#{station1}, #{station2})
+    </select>
+
+</mapper>
