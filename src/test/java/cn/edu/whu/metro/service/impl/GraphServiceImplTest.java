@@ -26,4 +26,10 @@ public class GraphServiceImplTest extends MetroApplicationTest {
     public void deleteRelationship() {
         graphService.deleteRelations("Sta137", "Sta136");
     }
+
+    @Test
+    public void getMatrices() {
+        graphService.getAdjacencyMatrix();
+        graphService.getDistanceMatrix();
+    }
 }

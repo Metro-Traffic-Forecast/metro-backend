@@ -53,9 +53,6 @@ public class GraphServiceImpl implements IGraphService {
         node1.addLabel("标签1");
         stationNodeRepository.saveAll(new ArrayList<StationNode>() { { add(node1); add(node2); } });
         createRelationshipBetweenStations(node1, node2);
-        // StationRelationship relationship1 = StationRelationship.builder().self(node1).neighbor(node2).build();
-        // StationRelationship relationship2 = StationRelationship.builder().self(node2).neighbor(node1).build();
-        // stationRelationshipRepository.saveAll(new ArrayList<StationRelationship>() { { add(relationship1); add(relationship2); } });
     }
 
     @Override
@@ -63,7 +60,6 @@ public class GraphServiceImpl implements IGraphService {
         Iterable<StationNode> nodes = stationNodeRepository.findAllById(id);
         return nodes;
     }
-
 
     @Override
     public void createStationsGraph() {
@@ -154,6 +150,7 @@ public class GraphServiceImpl implements IGraphService {
         createRelationshipBetweenStations(node1.get(), node2.get());
         createRelationshipBetweenStations(node1.get(), node3.get());
     }
+
     public void linkLines(String id1, String id2) {
         Optional<StationNode> node1 = stationNodeRepository.findById(id1);
         Optional<StationNode> node2 = stationNodeRepository.findById(id2);
@@ -195,5 +192,13 @@ public class GraphServiceImpl implements IGraphService {
         stationRelationshipRepository.deleteStationRelationshipById(station1, station2);
     }
 
+    public int[][] getAdjacencyMatrix() {
+        List<Station> stations = stationMapper.selectList(new QueryWrapper<Station>().orderByAsc("line_name").orderByAsc("sequence"));
+        stations.forEach(System.out::println);
+        return  null;
+    }
 
+    public double[][] getDistanceMatrix() {
+        return null;
+    }
 }
