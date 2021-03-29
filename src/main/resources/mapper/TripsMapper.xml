@@ -13,4 +13,41 @@
         AND station_out IN (#{station1}, #{station2})
     </select>
 
+
+    <resultMap id="StationFlowDTO" type="cn.edu.whu.metro.dto.StationFlowDTO">
+        <result property="id" column="id"/>
+        <result property="flow" column="cnt"/>
+    </resultMap>
+    <select id="queryStationInFlowInTimeSlice" resultMap="StationFlowDTO">
+        SELECT
+            station.id,
+            COUNT( trips.id ) AS cnt
+        FROM
+            trips,
+            station
+        WHERE
+            ( trips.time_in BETWEEN #{startTime} AND #{endTime} )
+            AND station.station_id = trips.station_in
+        GROUP BY
+            station.id
+        ORDER BY
+            station.id ASC
+    </select>
+
+    <select id="queryStationOutFlowInTimeSlice" resultMap="StationFlowDTO">
+        SELECT
+            station.id,
+            COUNT( trips.id ) AS cnt
+        FROM
+            trips,
+            station
+        WHERE
+            ( trips.time_out BETWEEN #{startTime} AND #{endTime} )
+            AND station.station_id = trips.station_out
+        GROUP BY
+            station.id
+        ORDER BY
+            station.id ASC
+    </select>
+
 </mapper>

@@ -4,6 +4,8 @@ import cn.edu.whu.metro.MetroApplicationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
+
 /**
  * TODO
  *
@@ -29,7 +31,7 @@ public class GraphServiceImplTest extends MetroApplicationTest {
 
     @Test
     public void getMatrices() {
-        graphService.getAdjacencyMatrix();
+        Arrays.stream(graphService.getAdjacencyMatrix()).forEach(row -> { Arrays.stream(row).forEach(System.out::print); System.out.println(); });
         graphService.getDistanceMatrix();
     }
 }

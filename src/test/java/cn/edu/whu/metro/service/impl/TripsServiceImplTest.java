@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -22,10 +23,18 @@ public class TripsServiceImplTest extends MetroApplicationTest {
     @Autowired
     TripsMapper tripsMapper;
 
+    @Autowired
+    TripsServiceImpl tripsService;
+
     @Test
     public void query() {
         IPage<Trips> page = new Page<>();
         tripsMapper.selectPage(page, null);
         System.out.println(page.getRecords().size());
+    }
+
+    @Test
+    public void queryFlow() {
+        tripsService.queryStationFlowInTimeSlice(new Timestamp(119, 11, 26, 0, 0, 0, 0), new Timestamp(120, 6, 17, 0, 0, 0, 0));
     }
 }

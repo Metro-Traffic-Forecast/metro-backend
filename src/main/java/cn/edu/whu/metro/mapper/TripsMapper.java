@@ -1,9 +1,14 @@
 package cn.edu.whu.metro.mapper;
 
+import cn.edu.whu.metro.dto.StationFlowDTO;
 import cn.edu.whu.metro.dto.StatisticInfoDTO;
 import cn.edu.whu.metro.entity.Trips;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -25,5 +30,25 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @return java.lang.Double
      **/
     StatisticInfoDTO queryAverageTimeBetweenStations(@Param("station1") String station1, @Param("station2") String station2);
+
+    /**
+     * 查询一个时间段内各个站点的进站客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    List<StationFlowDTO> queryStationInFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询一个时间段内各个站点的出站客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    List<StationFlowDTO> queryStationOutFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
 }

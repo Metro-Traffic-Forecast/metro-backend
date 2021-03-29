@@ -18,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * TODO
@@ -193,12 +195,63 @@ public class GraphServiceImpl implements IGraphService {
     }
 
     public int[][] getAdjacencyMatrix() {
-        List<Station> stations = stationMapper.selectList(new QueryWrapper<Station>().orderByAsc("line_name").orderByAsc("sequence"));
-        stations.forEach(System.out::println);
-        return  null;
+        int[][] adjMatrix = new int[164][164];
+        double[][] disMatrix = new double[164][164];
+        File adjFile = new File("C:\\Users\\thomas\\Desktop\\trips\\" + "adj-matrix" + ".txt");
+        File disFile = new File("C:\\Users\\thomas\\Desktop\\trips\\" + "dis-matrix" + ".txt");
+        try {
+            if (!adjFile.exists()) {
+                Boolean res = adjFile.createNewFile();
+            }
+            if (!disFile.exists()) {
+                Boolean res = disFile.createNewFile();
+            }
+            BufferedWriter adjWriter = new BufferedWriter(new FileWriter(adjFile));
+            BufferedWriter disWriter = new BufferedWriter(new FileWriter(disFile));
+            // List<Station> stations = stationMapper.selectList(new QueryWrapper<Station>().orderByAsc("line_name").orderByAsc("sequence"));
+            List<Station> stations = stationMapper.selectList(new QueryWrapper<Station>().orderByAsc("id"));
+            int size = stations.size();
+            for (int i=0; i<size; i++) {
+                for (int j=i+1; j<size; j++) {
+                    List<StationRelationship> relationships = stationRelationshipRepository.findStationRelationshipById(stations.get(i).getStationId(), stations.get(j).getStationId());
+                    if (relationships.size()!=0) {
+                        adjMatrix[i][j] = 1;
+                        adjMatrix[j][i] = 1;
+                        disMatrix[i][j] = relationships.get(0).getDistance();
+                        disMatrix[j][i] = disMatrix[i][j];
+                    }
+                }
+            }
+            Arrays.stream(adjMatrix).forEach( line -> {
+                try {
+                    adjWriter.write(Arrays.toString(line).replace("[", "").replace("]", "").replace(" ", ""));
+                    adjWriter.newLine();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            Arrays.stream(disMatrix).forEach( line -> {
+                try {
+                    disWriter.write(Arrays.toString(line).replace("[", "").replace("]", "").replace(" ", ""));
+                    disWriter.newLine();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            adjWriter.flush();adjWriter.close();
+            disWriter.flush();disWriter.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return  adjMatrix;
     }
 
     public double[][] getDistanceMatrix() {
         return null;
     }
+
 }
