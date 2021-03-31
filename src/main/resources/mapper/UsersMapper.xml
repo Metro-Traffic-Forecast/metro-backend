@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.whu.metro.mapper.UsersMapper">
+    <select id="stationCountInBetween" resultType="cn.edu.whu.metro.dto.UserInfoDTO">
+        SELECT t.station_in AS station,u.sexual AS sexual,COUNT(u.id) AS number FROM users u RIGHT JOIN trips t ON u.id=t.user_id
+        WHERE u.birth BETWEEN #{startTime} AND #{endTime} AND t.station_in = #{station}
+        GROUP BY u.sexual
+    </select>
+
+    <select id="stationCountOutBetween" resultType="cn.edu.whu.metro.dto.UserInfoDTO">
+        SELECT t.station_out AS station,u.sexual AS sexual,COUNT(u.id) AS number FROM users u RIGHT JOIN trips t ON u.id=t.user_id
+        WHERE u.birth BETWEEN #{startTime} AND #{endTime} AND  t.station_out = #{station}
+        GROUP BY u.sexual
+    </select>
+
+    <select id="countInBetween" resultType="cn.edu.whu.metro.dto.UserInfoDTO">
+        SELECT t.station_in AS station,u.sexual AS sexual,COUNT(u.id) AS number FROM users u RIGHT JOIN trips t ON u.id=t.user_id
+        WHERE u.birth BETWEEN #{startTime} AND #{endTime}
+        GROUP BY t.station_in,u.sexual
+    </select>
+
+    <select id="countOutBetween" resultType="cn.edu.whu.metro.dto.UserInfoDTO">
+        SELECT t.station_out AS station,u.sexual AS sexual,COUNT(u.id) AS number FROM users u RIGHT JOIN trips t ON u.id=t.user_id
+        WHERE u.birth BETWEEN #{startTime} AND #{endTime}
+        GROUP BY t.station_out,u.sexual
+    </select>
 
 </mapper>

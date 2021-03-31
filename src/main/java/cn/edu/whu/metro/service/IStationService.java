@@ -1,7 +1,9 @@
 package cn.edu.whu.metro.service;
 
 import cn.edu.whu.metro.dto.StatisticInfoDTO;
+import cn.edu.whu.metro.dto.UserInfoDTO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +24,18 @@ public interface IStationService {
      * @return java.lang.Double
      **/
     StatisticInfoDTO queryAverageTimeBetweenStations(String station1, String station2);
+
+    /**
+     * @Description: 根据开始时间和时间跨度统计各个车站进和出的人流量
+     * @Author: MrWang98
+     * @Date: 2021/3/31 11:36
+     * @Param:
+     * @param station station
+     * @param startTime startTime
+     * @param endTime endTime
+     * @Return: java.util.Map<java.lang.String,java.util.List<cn.edu.whu.metro.dto.UserInfoDTO>>
+     */
+    Map<String,List<UserInfoDTO>> queryStationPeopleNumber(String station,String startTime, String endTime);
 
     /**
      * 查询某条线路的站点之间所需要的平均时间

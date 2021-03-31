@@ -1,11 +1,12 @@
 package cn.edu.whu.metro.service.impl;
 
 import cn.edu.whu.metro.dto.StatisticInfoDTO;
+import cn.edu.whu.metro.dto.UserInfoDTO;
 import cn.edu.whu.metro.entity.Station;
 import cn.edu.whu.metro.mapper.StationMapper;
 import cn.edu.whu.metro.mapper.TripsMapper;
+import cn.edu.whu.metro.mapper.UsersMapper;
 import cn.edu.whu.metro.service.IStationService;
-import com.alibaba.druid.support.spring.stat.annotation.Stat;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.Map;
 @Service
 public class StationServiceImpl implements IStationService {
 
+    private static long ONE_MINUTE = 60000L;
 
     @Autowired
     TripsMapper tripsMapper;
@@ -30,9 +32,27 @@ public class StationServiceImpl implements IStationService {
     @Autowired
     StationMapper stationMapper;
 
+    @Autowired
+    UsersMapper usersMapper;
+
     @Override
     public StatisticInfoDTO queryAverageTimeBetweenStations(String station1, String station2) {
         return tripsMapper.queryAverageTimeBetweenStations(station1, station2);
+    }
+
+    @Override
+    public Map<String,List<UserInfoDTO>> queryStationPeopleNumber(String station,String startTime, String endTime){
+        Map<String,List<UserInfoDTO>> result = new HashMap<>();
+
+        if(station==""){
+            result.put("in",usersMapper.countInBetween(startTime,endTime));
+            result.put("out",usersMapper.countOutBetween(startTime,endTime));
+        }
+        else{
+            result.put("in",usersMapper.stationCountInBetween(station,startTime,endTime));
+            result.put("out",usersMapper.stationCountOutBetween(station,startTime,endTime));
+        }
+        return result;
     }
 
     @Override

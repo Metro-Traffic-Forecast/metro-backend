@@ -32,7 +32,7 @@ public class Users implements Serializable {
     private String province;
 
     @ApiModelProperty(value = "出生年")
-    private String birth;
+    private Integer birth;
 
     @ApiModelProperty(value = "性别，0男1女")
     private Boolean sexual;
