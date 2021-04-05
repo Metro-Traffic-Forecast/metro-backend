@@ -27,4 +27,7 @@ public interface StationRelationshipRepository extends Neo4jRepository<StationRe
     @Query("MATCH (f:StationNode{station_id: $0})-[r]-(t:StationNode{station_id: $1}) RETURN f,r,t")
     List<StationRelationship> findStationRelationshipById(String from, String to);
 
+    @Query("MATCH p=shortestPath((a:StationNode{station_id:$0})-[*]-(b:StationNode{station_id:$1})) RETURN p")
+    List<StationRelationship> findDistanceBetweenStations(String from, String to);
+
 }

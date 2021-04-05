@@ -24,6 +24,6 @@ public interface ITripsService extends IService<Trips> {
      * @param end 结束时间
      * @return void
      **/
-    void queryStationFlowInTimeSlice(Timestamp start, Timestamp end);
+    void queryStationFlowInTimeSlice(Timestamp start, Timestamp end, int step);
 
 }

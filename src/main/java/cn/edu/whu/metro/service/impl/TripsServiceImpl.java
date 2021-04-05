@@ -36,12 +36,12 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
     StationMapper stationMapper;
 
     @Override
-    public void queryStationFlowInTimeSlice(Timestamp start, Timestamp end) {
+    public void queryStationFlowInTimeSlice(Timestamp start, Timestamp end, int step) {
         List<Station> stations = stationMapper.selectList(new QueryWrapper<Station>().orderByAsc("station_id"));
 
         Instant startSecond = start.toInstant();
         Instant endSecond = end.toInstant();
-        int step = 6;
+
         File file = new File("C:\\Users\\thomas\\Desktop\\trips\\" + "trips-" + step + ".txt");
         try {
             if (!file.exists()) {
@@ -49,11 +49,19 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
             }
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             while (startSecond.isBefore(endSecond)) {
+                Instant tmp = startSecond.plusSeconds(step * 60 * 60);
+                Timestamp from = Timestamp.from(startSecond);
+                Timestamp to = Timestamp.from(tmp);
+                // 忽略每天凌晨的数据
+//                if (from.getHours() == 0) {
+//                    startSecond = tmp;
+//                    continue;
+//                }
+                String time = String.valueOf(from.getYear() + 1900) + "年" + String.valueOf(from.getMonth() + 1) + "月" + String.valueOf(from.getDate()) + "日";
                 int[] inFlowValue = new int[164];
                 int[] outFlowValue = new int[164];
-                Instant tmp = startSecond.plusSeconds(step * 60 * 60);
-                List<StationFlowDTO> inFlow = tripsMapper.queryStationInFlowInTimeSlice(Timestamp.from(startSecond).toString(), Timestamp.from(tmp).toString());
-                List<StationFlowDTO> outFlow = tripsMapper.queryStationOutFlowInTimeSlice(Timestamp.from(startSecond).toString(), Timestamp.from(tmp).toString());
+                List<StationFlowDTO> inFlow = tripsMapper.queryStationInFlowInTimeSlice(from.toString(), to.toString());
+                List<StationFlowDTO> outFlow = tripsMapper.queryStationOutFlowInTimeSlice(from.toString(), to.toString());
                 try {
                     inFlow.forEach( o -> inFlowValue[o.getId() - 1] = o.getFlow());
                     outFlow.forEach( o -> outFlowValue[o.getId() - 1] = o.getFlow());
@@ -61,9 +69,20 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
                 catch (NullPointerException e) {
                     // 说名trips中的站点不在station列表中 啥也不干
                 }
-                StringBuilder line = new StringBuilder().append(inFlowValue[0]).append(",").append(outFlowValue[0]);
+                StringBuilder line = new StringBuilder()
+//                        .append(time)
+//                        .append(",")
+                        .append(inFlowValue[0])
+//                        .append(",")
+//                        .append(outFlowValue[0])
+                        ;
                 for (int i=1; i<164; i++) {
-                    line.append(",").append(inFlowValue[i]).append(",").append(outFlowValue[i]);
+                    line
+                            .append(",")
+                            .append(inFlowValue[i])
+//                            .append(",")
+//                            .append(outFlowValue[i])
+                    ;
                 }
                 writer.write(line.toString());
                 writer.flush();

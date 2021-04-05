@@ -14,6 +14,7 @@ import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -251,7 +252,44 @@ public class GraphServiceImpl implements IGraphService {
     }
 
     public double[][] getDistanceMatrix() {
-        return null;
+
+        double[][] disMatrix = new double[164][164];
+        File disFile = new File("C:\\Users\\thomas\\Desktop\\trips\\" + "dis-matrix-all" + ".txt");
+        try {
+            if (!disFile.exists()) {
+                Boolean res = disFile.createNewFile();
+            }
+            BufferedWriter disWriter = new BufferedWriter(new FileWriter(disFile));
+            // List<Station> stations = stationMapper.selectList(new QueryWrapper<Station>().orderByAsc("line_name").orderByAsc("sequence"));
+            List<Station> stations = stationMapper.selectList(new QueryWrapper<Station>().orderByAsc("id"));
+            int size = stations.size();
+            for (int i=0; i<size; i++) {
+                for (int j=i+1; j<size; j++) {
+                    List<StationRelationship> relationships = stationRelationshipRepository.findDistanceBetweenStations(stations.get(i).getStationId(), stations.get(j).getStationId());
+                    if (relationships.size()!=0) {
+                        for (StationRelationship r : relationships) {
+                            disMatrix[i][j] += r.getDistance();
+                        }
+                        disMatrix[j][i] = disMatrix[i][j];
+                    }
+                }
+            }
+            Arrays.stream(disMatrix).forEach( line -> {
+                try {
+                    disWriter.write(Arrays.toString(line).replace("[", "").replace("]", "").replace(" ", ""));
+                    disWriter.newLine();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            disWriter.flush();disWriter.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return disMatrix;
     }
 
 }

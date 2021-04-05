@@ -34,4 +34,9 @@ public class GraphServiceImplTest extends MetroApplicationTest {
         Arrays.stream(graphService.getAdjacencyMatrix()).forEach(row -> { Arrays.stream(row).forEach(System.out::print); System.out.println(); });
         graphService.getDistanceMatrix();
     }
+
+    @Test
+    public void getDistanceMatrix() {
+        graphService.getDistanceMatrix();
+    }
 }
