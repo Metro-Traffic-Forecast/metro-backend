@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -34,10 +35,19 @@ public class MetroFlowController {
     @ApiOperation("查询某个时间段内所有站点的客流")
     @GetMapping("/metro/inflow")
     public List<StationFlowVO[]> queryStationOutFlow(
-            @RequestParam("start") @ApiParam(value = "开始时间") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-            @RequestParam("end") @ApiParam(value = "结束时间") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-            @RequestParam("step") @ApiParam(value = "时间步长，单位小时") Integer step) {
+            @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+            @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+            @RequestParam("step") @ApiParam(value = "时间步长，单位小时", example = "6") Integer step) {
         return tripsService.queryStationInFlow(Timestamp.valueOf(start), Timestamp.valueOf(end), step);
+    }
+
+    @ApiOperation("查询某个时间段内所有线路的换乘客流")
+    @GetMapping("/metro/line/exchange")
+    public HashMap<String, HashMap<String, Integer>> queryLineExchangeFlow(
+            @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+            @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end
+            ) {
+        return tripsService.queryLineExchangeFlow(start, end);
     }
 
 }

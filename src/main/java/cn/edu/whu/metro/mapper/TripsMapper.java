@@ -94,4 +94,17 @@ public interface TripsMapper extends BaseMapper<Trips> {
      **/
     List<LineFlowDTO> queryLineOutFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
+
+    /**
+     * 查询一个时间段内各个线路的换乘客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    Integer queryLineExchangeFlow(@Param("lineIn") String lineIn, @Param("lineOut") String lineOut, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+
+
 }

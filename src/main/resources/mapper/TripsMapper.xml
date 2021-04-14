@@ -119,4 +119,15 @@
             station.line_name ASC
     </select>
 
+    <select id="queryLineExchangeFlow" resultType="Integer">
+        SELECT
+            COUNT( trips.id ) AS cnt
+        FROM
+            trips
+        WHERE
+            trips.station_in IN ( SELECT station.station_id FROM station WHERE line_name = #{lineIn} )
+            AND trips.station_out IN ( SELECT station.station_id FROM station WHERE line_name = #{lineOut} )
+            AND ((trips.time_in BETWEEN #{startTime} AND #{endTime} ) OR ( trips.time_out BETWEEN #{startTime} AND #{endTime} ) )
+    </select>
+
 </mapper>

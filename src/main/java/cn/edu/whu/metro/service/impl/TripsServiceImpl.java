@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -147,5 +148,26 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
     @Override
     public List<StationFlowVO[]>  queryStationOutFlow(Timestamp start, Timestamp end, int step) {
         return null;
+    }
+
+    @Override
+    public HashMap<String, HashMap<String, Integer>> queryLineExchangeFlow(LocalDateTime start, LocalDateTime end) {
+        HashMap<String, HashMap<String, Integer>> result = new HashMap<>(64);
+        List<String> lineName = stationMapper.queryLineName();
+        lineName.forEach(
+            m -> {
+                HashMap<String, Integer> map = new HashMap<>(1);
+                lineName.forEach(
+                    n -> {
+                        if (!m.equals(n)) {
+                            Integer count = tripsMapper.queryLineExchangeFlow(m, n, start.toString(), end.toString());
+                            map.put(n, count);
+                        }
+                    }
+                );
+                result.put(m, map);
+            }
+        );
+        return result;
     }
 }

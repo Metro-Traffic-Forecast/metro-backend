@@ -2,4 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.whu.metro.mapper.StationMapper">
 
+    <select id="queryLineName" resultType="String">
+        SELECT DISTINCT line_name FROM station ORDER BY line_name ASC
+    </select>
+
 </mapper>

@@ -40,7 +40,12 @@ public enum ResultCode {
 
     NULL_POINTER_EXCEPTION("E0000","空指针异常"),
 
-    UNKNOWN_EXCEPTION("N0006","未设置处理函数的异常");
+    UNKNOWN_EXCEPTION("N0006","未设置处理函数的异常"),
+
+    METHOD_ARG_TYPE_MISMATCH("H400", "请求参数解析错误，请检查参数格式是否正确")
+
+
+    ;
 
 
 
