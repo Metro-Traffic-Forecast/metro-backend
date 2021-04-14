@@ -8,6 +8,7 @@ import cn.edu.whu.metro.mapper.TripsMapper;
 import cn.edu.whu.metro.mapper.UsersMapper;
 import cn.edu.whu.metro.service.IStationService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ import java.util.Map;
  * TODO
  **/
 @Service
-public class StationServiceImpl implements IStationService {
+public class StationServiceImpl extends ServiceImpl<StationMapper, Station> implements IStationService {
 
     private static long ONE_MINUTE = 60000L;
 

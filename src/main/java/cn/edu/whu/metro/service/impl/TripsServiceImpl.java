@@ -6,6 +6,7 @@ import cn.edu.whu.metro.entity.Trips;
 import cn.edu.whu.metro.mapper.StationMapper;
 import cn.edu.whu.metro.mapper.TripsMapper;
 import cn.edu.whu.metro.service.ITripsService;
+import cn.edu.whu.metro.vo.StationFlowVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -53,10 +52,10 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
                 Timestamp from = Timestamp.from(startSecond);
                 Timestamp to = Timestamp.from(tmp);
                 // 忽略每天凌晨的数据
-//                if (from.getHours() == 0) {
-//                    startSecond = tmp;
-//                    continue;
-//                }
+                if (from.getHours() == 0) {
+                    startSecond = tmp;
+                    continue;
+                }
                 String time = String.valueOf(from.getYear() + 1900) + "年" + String.valueOf(from.getMonth() + 1) + "月" + String.valueOf(from.getDate()) + "日";
                 int[] inFlowValue = new int[164];
                 int[] outFlowValue = new int[164];
@@ -98,5 +97,55 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
 
 
 
+    }
+
+    @Override
+    public void queryLineFlowInTimeSlice(Timestamp start, Timestamp end, int step) {
+        Instant startSecond = start.toInstant();
+        Instant endSecond = end.toInstant();
+
+        while (startSecond.isBefore(endSecond)) {
+            Instant tmp = startSecond.plusSeconds(step * 60 * 60);
+            Timestamp from = Timestamp.from(startSecond);
+            Timestamp to = Timestamp.from(tmp);
+            // 忽略每天凌晨的数据
+//                if (from.getHours() == 0) {
+//                    startSecond = tmp;
+//                    continue;
+//                }
+            String time = String.valueOf(from.getYear() + 1900) + "年" + String.valueOf(from.getMonth() + 1) + "月" + String.valueOf(from.getDate()) + "日";
+            HashMap<String, Integer> flow = new HashMap<>(8);
+            tripsMapper.queryLineInFlowInTimeSlice(from.toString(), to.toString()).stream().forEach( o -> flow.put(o.getLineName(), o.getFlow()));
+            flow.forEach((k, v) -> System.out.println(k + " " + v));
+
+            startSecond = tmp;
+        }
+
+
+
+    }
+
+    @Override
+    public List<StationFlowVO[]> queryStationInFlow(Timestamp start, Timestamp end, int step) {
+        List<StationFlowVO[]> result = new ArrayList<>();
+        Instant startSecond = start.toInstant();
+        Instant endSecond = end.toInstant();
+        while (startSecond.isBefore(endSecond)) {
+            Instant tmp = startSecond.plusSeconds(step * 60 * 60);
+            Timestamp from = Timestamp.from(startSecond);
+            Timestamp to = Timestamp.from(tmp);
+
+            StationFlowVO[] stationFlow = new StationFlowVO[164];
+            List<StationFlowVO> inFlow = tripsMapper.queryStationInFlow(from.toString(), to.toString());
+            inFlow.forEach(o -> stationFlow[o.getId() - 1] = o);
+            result.add(stationFlow);
+            startSecond = tmp;
+        }
+        return result;
+    }
+
+    @Override
+    public List<StationFlowVO[]>  queryStationOutFlow(Timestamp start, Timestamp end, int step) {
+        return null;
     }
 }

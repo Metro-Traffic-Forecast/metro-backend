@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * spring boot 主程序
  **/
 @SpringBootApplication
-@MapperScan("cn.edu.whu.metro.mapper")
 public class MetroApplication {
     public static void main(String[] args) {
         SpringApplication.run(MetroApplication.class, args);

@@ -2,6 +2,8 @@ package cn.edu.whu.metro.service;
 
 import cn.edu.whu.metro.dto.StatisticInfoDTO;
 import cn.edu.whu.metro.dto.UserInfoDTO;
+import cn.edu.whu.metro.entity.Station;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +14,7 @@ import java.util.Map;
  * @date 2021/3/26 19:02
  * TODO
  **/
-public interface IStationService {
+public interface IStationService extends IService<Station> {
 
     /**
      * 根据两个站点id查询站点之间的平均时间

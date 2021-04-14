@@ -1,8 +1,10 @@
 package cn.edu.whu.metro.mapper;
 
+import cn.edu.whu.metro.dto.LineFlowDTO;
 import cn.edu.whu.metro.dto.StationFlowDTO;
 import cn.edu.whu.metro.dto.StatisticInfoDTO;
 import cn.edu.whu.metro.entity.Trips;
+import cn.edu.whu.metro.vo.StationFlowVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
@@ -50,5 +52,46 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @return
      **/
     List<StationFlowDTO> queryStationOutFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询一个时间段内各个站点的进站客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    List<StationFlowVO> queryStationInFlow(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询一个时间段内各个站点的出站客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    List<StationFlowVO> queryStationOutFlow(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+
+    /**
+     * 查询一个时间段内各个线路的出站客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    List<LineFlowDTO> queryLineInFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询一个时间段内各个线路的出站客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    List<LineFlowDTO> queryLineOutFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
 }

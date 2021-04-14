@@ -18,6 +18,8 @@
         <result property="id" column="id"/>
         <result property="flow" column="cnt"/>
     </resultMap>
+
+
     <select id="queryStationInFlowInTimeSlice" resultMap="StationFlowDTO">
         SELECT
             station.id,
@@ -48,6 +50,73 @@
             station.id
         ORDER BY
             station.id ASC
+    </select>
+
+
+
+    <select id="queryStationInFlow" resultType="cn.edu.whu.metro.vo.StationFlowVO">
+        SELECT
+            station.id,
+            station.station_id,
+            COUNT( trips.id ) AS flow
+        FROM
+            trips,
+            station
+        WHERE
+            ( trips.time_in BETWEEN #{startTime} AND #{endTime} )
+            AND station.station_id = trips.station_in
+        GROUP BY
+            station.id, station.station_id
+        ORDER BY
+            station.id ASC
+    </select>
+
+    <select id="queryStationOutFlow" resultType="cn.edu.whu.metro.vo.StationFlowVO">
+        SELECT
+            station.id,
+            station.station_id,
+            COUNT( trips.id ) AS flow
+        FROM
+            trips,
+            station
+        WHERE
+            ( trips.time_out BETWEEN #{startTime} AND #{endTime} )
+            AND station.station_id = trips.station_out
+        GROUP BY
+            station.id, station.station_id
+        ORDER BY
+            station.id ASC
+    </select>
+
+
+    <select id="queryLineInFlowInTimeSlice" resultType="cn.edu.whu.metro.dto.LineFlowDTO">
+        SELECT
+            station.line_name AS line_name,
+            COUNT( trips.id ) AS flow
+        FROM
+            trips
+            RIGHT JOIN station ON trips.station_in = station.station_id
+        WHERE
+            ( trips.time_in BETWEEN #{startTime} AND #{endTime} )
+        GROUP BY
+            station.line_name
+        ORDER BY
+            station.line_name ASC
+    </select>
+
+    <select id="queryLineOutFlowInTimeSlice" resultType="cn.edu.whu.metro.dto.LineFlowDTO">
+        SELECT
+            station.line_name AS line_name,
+            COUNT( trips.id ) AS flow
+        FROM
+            trips
+            RIGHT JOIN station ON trips.station_out = station.station_id
+        WHERE
+            ( trips.time_out BETWEEN #{startTime} AND #{endTime} )
+        GROUP BY
+            station.line_name
+        ORDER BY
+            station.line_name ASC
     </select>
 
 </mapper>
