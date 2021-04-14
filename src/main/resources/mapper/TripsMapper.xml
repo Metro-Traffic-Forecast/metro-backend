@@ -14,7 +14,7 @@
     </select>
 
 
-    <resultMap id="StationFlowDTO" type="cn.edu.whu.metro.dto.StationFlowDTO">
+    <resultMap id="StationFlowDTO" type="cn.edu.whu.metro.dto.StationIdFlowDTO">
         <result property="id" column="id"/>
         <result property="flow" column="cnt"/>
     </resultMap>
@@ -128,6 +128,32 @@
             trips.station_in IN ( SELECT station.station_id FROM station WHERE line_name = #{lineIn} )
             AND trips.station_out IN ( SELECT station.station_id FROM station WHERE line_name = #{lineOut} )
             AND ((trips.time_in BETWEEN #{startTime} AND #{endTime} ) OR ( trips.time_out BETWEEN #{startTime} AND #{endTime} ) )
+    </select>
+
+    <select id="queryStationInFlowByLine" resultType="cn.edu.whu.metro.dto.StationNameFlowDTO">
+        SELECT
+            trips.station_in AS station_id,
+            COUNT( trips.id ) AS flow
+        FROM
+            trips
+        WHERE
+            trips.station_in IN ( SELECT station_id FROM station WHERE line_name = #{lineName} )
+            AND ( trips.time_in BETWEEN #{startTime} AND #{endTime} )
+        GROUP BY
+            trips.station_in
+    </select>
+
+    <select id="queryStationOutFlowByLine" resultType="cn.edu.whu.metro.dto.StationNameFlowDTO">
+        SELECT
+            trips.station_out AS station_id,
+            COUNT( trips.id ) AS flow
+        FROM
+            trips
+        WHERE
+            trips.station_out IN ( SELECT station_id FROM station WHERE line_name = #{lineName} )
+            AND ( trips.time_in BETWEEN #{startTime} AND #{endTime} )
+        GROUP BY
+            trips.station_out
     </select>
 
 </mapper>

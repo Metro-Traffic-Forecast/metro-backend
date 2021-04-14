@@ -1,11 +1,13 @@
 package cn.edu.whu.metro.service.impl;
 
-import cn.edu.whu.metro.dto.StationFlowDTO;
+import cn.edu.whu.metro.dto.StationIdFlowDTO;
+import cn.edu.whu.metro.dto.StationNameFlowDTO;
 import cn.edu.whu.metro.entity.Station;
 import cn.edu.whu.metro.entity.Trips;
 import cn.edu.whu.metro.mapper.StationMapper;
 import cn.edu.whu.metro.mapper.TripsMapper;
 import cn.edu.whu.metro.service.ITripsService;
+import cn.edu.whu.metro.vo.StationSectionFlowVO;
 import cn.edu.whu.metro.vo.StationFlowVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +19,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -60,8 +63,8 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
                 String time = String.valueOf(from.getYear() + 1900) + "年" + String.valueOf(from.getMonth() + 1) + "月" + String.valueOf(from.getDate()) + "日";
                 int[] inFlowValue = new int[164];
                 int[] outFlowValue = new int[164];
-                List<StationFlowDTO> inFlow = tripsMapper.queryStationInFlowInTimeSlice(from.toString(), to.toString());
-                List<StationFlowDTO> outFlow = tripsMapper.queryStationOutFlowInTimeSlice(from.toString(), to.toString());
+                List<StationIdFlowDTO> inFlow = tripsMapper.queryStationInFlowInTimeSlice(from.toString(), to.toString());
+                List<StationIdFlowDTO> outFlow = tripsMapper.queryStationOutFlowInTimeSlice(from.toString(), to.toString());
                 try {
                     inFlow.forEach( o -> inFlowValue[o.getId() - 1] = o.getFlow());
                     outFlow.forEach( o -> outFlowValue[o.getId() - 1] = o.getFlow());
@@ -147,7 +150,21 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
 
     @Override
     public List<StationFlowVO[]>  queryStationOutFlow(Timestamp start, Timestamp end, int step) {
-        return null;
+        List<StationFlowVO[]> result = new ArrayList<>();
+        Instant startSecond = start.toInstant();
+        Instant endSecond = end.toInstant();
+        while (startSecond.isBefore(endSecond)) {
+            Instant tmp = startSecond.plusSeconds(step * 60 * 60);
+            Timestamp from = Timestamp.from(startSecond);
+            Timestamp to = Timestamp.from(tmp);
+
+            StationFlowVO[] stationFlow = new StationFlowVO[164];
+            List<StationFlowVO> inFlow = tripsMapper.queryStationOutFlow(from.toString(), to.toString());
+            inFlow.forEach(o -> stationFlow[o.getId() - 1] = o);
+            result.add(stationFlow);
+            startSecond = tmp;
+        }
+        return result;
     }
 
     @Override
@@ -166,6 +183,32 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
                     }
                 );
                 result.put(m, map);
+            }
+        );
+        return result;
+    }
+
+    @Override
+    public List<StationSectionFlowVO> queryLineSectionFlow(String lineName, LocalDateTime start, LocalDateTime end) {
+        List<StationSectionFlowVO> result = new ArrayList<>();
+        // 首先查出所有站点的上行客流
+        List<StationNameFlowDTO> upFlow = tripsMapper.queryStationInFlowByLine(lineName, start.toString(), end.toString());
+        Map<String, Integer> upFlowCache = upFlow.stream().collect(Collectors.toMap(StationNameFlowDTO::getStationId, StationNameFlowDTO::getFlow));
+        // 然后查出所有站点的下行客流
+        List<StationNameFlowDTO> downFlow = tripsMapper.queryStationOutFlowByLine(lineName, start.toString(), end.toString());
+        Map<String, Integer> downFlowCache = downFlow.stream().collect(Collectors.toMap(StationNameFlowDTO::getStationId, StationNameFlowDTO::getFlow));
+
+        // 查出线路的所有站点，按sequence排序
+        List<String> stations = stationMapper.selectList(new QueryWrapper<Station>().select("station_id").eq("line_name", lineName).orderByAsc("sequence")).stream().map(Station::getStationId).collect(Collectors.toList());
+        // 构造返回结果
+        stations.forEach(
+            station -> {
+                result.add(
+                    new StationSectionFlowVO()
+                        .setStationId(station)
+                        .setInflow(upFlowCache.getOrDefault(station, 0))
+                        .setOutflow(downFlowCache.getOrDefault(station, 0))
+                );
             }
         );
         return result;

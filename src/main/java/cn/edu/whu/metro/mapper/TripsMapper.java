@@ -1,15 +1,14 @@
 package cn.edu.whu.metro.mapper;
 
 import cn.edu.whu.metro.dto.LineFlowDTO;
-import cn.edu.whu.metro.dto.StationFlowDTO;
+import cn.edu.whu.metro.dto.StationIdFlowDTO;
+import cn.edu.whu.metro.dto.StationNameFlowDTO;
 import cn.edu.whu.metro.dto.StatisticInfoDTO;
 import cn.edu.whu.metro.entity.Trips;
 import cn.edu.whu.metro.vo.StationFlowVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @param
      * @return
      **/
-    List<StationFlowDTO> queryStationInFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<StationIdFlowDTO> queryStationInFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 查询一个时间段内各个站点的出站客流
@@ -51,7 +50,7 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @param
      * @return
      **/
-    List<StationFlowDTO> queryStationOutFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<StationIdFlowDTO> queryStationOutFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 查询一个时间段内各个站点的进站客流
@@ -106,5 +105,24 @@ public interface TripsMapper extends BaseMapper<Trips> {
     Integer queryLineExchangeFlow(@Param("lineIn") String lineIn, @Param("lineOut") String lineOut, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
 
+    /**
+     * 查询一个时间段内某条线路各个站点的上行客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    List<StationNameFlowDTO> queryStationInFlowByLine(@Param("lineName") String lineName, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 查询一个时间段内某条线路各个站点的下行客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param
+     * @return
+     **/
+    List<StationNameFlowDTO> queryStationOutFlowByLine(@Param("lineName") String lineName, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
 }

@@ -1,5 +1,6 @@
 package cn.edu.whu.metro.vo;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description = "站点客流VO")
 public class StationFlowVO {
 
     @ApiModelProperty("数据库id")

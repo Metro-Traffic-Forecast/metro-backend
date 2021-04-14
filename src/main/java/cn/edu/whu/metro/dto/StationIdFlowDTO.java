@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.MapKey;
 @Data
 @AllArgsConstructor
 @Builder
-public class StationFlowDTO {
+public class StationIdFlowDTO {
 
     private Integer id;
 

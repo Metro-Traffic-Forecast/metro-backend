@@ -1,6 +1,7 @@
 package cn.edu.whu.metro.service;
 
 import cn.edu.whu.metro.entity.Trips;
+import cn.edu.whu.metro.vo.StationSectionFlowVO;
 import cn.edu.whu.metro.vo.StationFlowVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -74,4 +75,16 @@ public interface ITripsService extends IService<Trips> {
      * @return void
      **/
     HashMap<String, HashMap<String, Integer>> queryLineExchangeFlow(LocalDateTime start, LocalDateTime end);
+
+
+    /**
+     * 根据时间段查询线路断面客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 22:01
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return void
+     **/
+    List<StationSectionFlowVO> queryLineSectionFlow(String lineName, LocalDateTime start, LocalDateTime end);
 }
