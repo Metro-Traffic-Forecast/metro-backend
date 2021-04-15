@@ -74,7 +74,7 @@ public interface TripsMapper extends BaseMapper<Trips> {
 
 
     /**
-     * 查询一个时间段内各个线路的出站客流
+     * 查询一个时间段内各个线路的入站客流
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22

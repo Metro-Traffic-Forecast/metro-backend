@@ -1,6 +1,7 @@
 package cn.edu.whu.metro.service;
 
 import cn.edu.whu.metro.entity.Trips;
+import cn.edu.whu.metro.vo.LineSectionFlowVO;
 import cn.edu.whu.metro.vo.StationSectionFlowVO;
 import cn.edu.whu.metro.vo.StationFlowVO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -21,7 +22,7 @@ import java.util.List;
 public interface ITripsService extends IService<Trips> {
 
     /**
-     * 根据时间段查询客流
+     * 根据时间段查询所有站点的入站客流
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 22:01
@@ -43,7 +44,7 @@ public interface ITripsService extends IService<Trips> {
     void queryLineFlowInTimeSlice(Timestamp start, Timestamp end, int step);
 
     /**
-     * 根据时间段查询入站客流
+     * 根据时间段查询所有站点的入站客流, 有时间步长
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 22:01
@@ -54,7 +55,18 @@ public interface ITripsService extends IService<Trips> {
     List<StationFlowVO[]> queryStationInFlow(Timestamp start, Timestamp end, int step);
 
     /**
-     * 根据时间段查询出站客流
+     * 根据时间段查询所有站点的入站客流， 无时间步长
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 22:01
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return void
+     **/
+    List<StationFlowVO[]> queryStationInFlow(Timestamp start, Timestamp end);
+
+    /**
+     * 根据时间段查询所有站点的出站客流，有时间步长
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 22:01
@@ -64,6 +76,16 @@ public interface ITripsService extends IService<Trips> {
      **/
     List<StationFlowVO[]> queryStationOutFlow(Timestamp start, Timestamp end, int step);
 
+    /**
+     * 根据时间段查询所有站点的出站客流， 无时间步长
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 22:01
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return void
+     **/
+    List<StationFlowVO[]> queryStationOutFlow(Timestamp start, Timestamp end);
 
     /**
      * 根据时间段查询换乘客流
@@ -78,7 +100,7 @@ public interface ITripsService extends IService<Trips> {
 
 
     /**
-     * 根据时间段查询线路断面客流
+     * 根据时间段按站点查询线路断面客流
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 22:01
@@ -86,5 +108,9 @@ public interface ITripsService extends IService<Trips> {
      * @param end 结束时间
      * @return void
      **/
-    List<StationSectionFlowVO> queryLineSectionFlow(String lineName, LocalDateTime start, LocalDateTime end);
+    List<StationSectionFlowVO> queryStationSectionFlow(String lineName, LocalDateTime start, LocalDateTime end);
+
+
+
+    List<LineSectionFlowVO> queryLineSectionFlow(String lineName,  LocalDateTime start, LocalDateTime end);
 }

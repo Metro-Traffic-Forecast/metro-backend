@@ -7,12 +7,14 @@ import cn.edu.whu.metro.entity.Trips;
 import cn.edu.whu.metro.mapper.StationMapper;
 import cn.edu.whu.metro.mapper.TripsMapper;
 import cn.edu.whu.metro.service.ITripsService;
+import cn.edu.whu.metro.vo.LineSectionFlowVO;
 import cn.edu.whu.metro.vo.StationSectionFlowVO;
 import cn.edu.whu.metro.vo.StationFlowVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.security.util.ArrayUtil;
 
 import java.io.*;
 import java.sql.Timestamp;
@@ -149,6 +151,17 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
     }
 
     @Override
+    public List<StationFlowVO[]> queryStationInFlow(Timestamp start, Timestamp end) {
+
+        StationFlowVO[] stationFlow = new StationFlowVO[164];
+        List<StationFlowVO> inFlow = tripsMapper.queryStationInFlow(start.toString(), end.toString());
+        inFlow.forEach(o -> stationFlow[o.getId() - 1] = o);
+
+        return new ArrayList<StationFlowVO[]>() {{ add(stationFlow); }};
+
+    }
+
+    @Override
     public List<StationFlowVO[]>  queryStationOutFlow(Timestamp start, Timestamp end, int step) {
         List<StationFlowVO[]> result = new ArrayList<>();
         Instant startSecond = start.toInstant();
@@ -165,6 +178,15 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
             startSecond = tmp;
         }
         return result;
+    }
+
+    @Override
+    public List<StationFlowVO[]> queryStationOutFlow(Timestamp start, Timestamp end) {
+        StationFlowVO[] stationFlow = new StationFlowVO[164];
+        List<StationFlowVO> outFlow = tripsMapper.queryStationOutFlow(start.toString(), end.toString());
+        outFlow.forEach(o -> stationFlow[o.getId() - 1] = o);
+
+        return new ArrayList<StationFlowVO[]>() {{ add(stationFlow); }};
     }
 
     @Override
@@ -189,7 +211,7 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
     }
 
     @Override
-    public List<StationSectionFlowVO> queryLineSectionFlow(String lineName, LocalDateTime start, LocalDateTime end) {
+    public List<StationSectionFlowVO> queryStationSectionFlow(String lineName, LocalDateTime start, LocalDateTime end) {
         List<StationSectionFlowVO> result = new ArrayList<>();
         // 首先查出所有站点的上行客流
         List<StationNameFlowDTO> upFlow = tripsMapper.queryStationInFlowByLine(lineName, start.toString(), end.toString());
@@ -212,5 +234,10 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
             }
         );
         return result;
+    }
+
+    @Override
+    public List<LineSectionFlowVO> queryLineSectionFlow(String lineName, LocalDateTime start, LocalDateTime end) {
+        return null;
     }
 }

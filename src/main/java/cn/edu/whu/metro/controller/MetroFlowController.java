@@ -37,7 +37,10 @@ public class MetroFlowController {
     public List<StationFlowVO[]> queryStationInFlow(
             @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
             @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-            @RequestParam("step") @ApiParam(value = "时间步长，单位小时", example = "6") Integer step) {
+            @RequestParam(value = "step", required = false) @ApiParam(value = "时间步长，单位小时;若小于等于0或不填，则返回整段时间的客流", example = "6") Integer step) {
+        if (step == null || step <= 0) {
+            return tripsService.queryStationInFlow(Timestamp.valueOf(start), Timestamp.valueOf(end));
+        }
         return tripsService.queryStationInFlow(Timestamp.valueOf(start), Timestamp.valueOf(end), step);
     }
 
@@ -46,7 +49,10 @@ public class MetroFlowController {
     public List<StationFlowVO[]> queryStationOutFlow(
             @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
             @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-            @RequestParam("step") @ApiParam(value = "时间步长，单位小时", example = "6") Integer step) {
+            @RequestParam(value = "step", required = false) @ApiParam(value = "时间步长，单位小时;若小于等于0或不填，则返回整段时间的客流", example = "6") Integer step) {
+        if (step == null || step <= 0) {
+            return tripsService.queryStationOutFlow(Timestamp.valueOf(start), Timestamp.valueOf(end));
+        }
         return tripsService.queryStationOutFlow(Timestamp.valueOf(start), Timestamp.valueOf(end), step);
     }
 
@@ -58,7 +64,7 @@ public class MetroFlowController {
             @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end
             ) {
 
-        return tripsService.queryLineSectionFlow(lineName, start, end);
+        return tripsService.queryStationSectionFlow(lineName, start, end);
     }
 
     @ApiOperation("查询某个时间段内所有线路的换乘客流")
