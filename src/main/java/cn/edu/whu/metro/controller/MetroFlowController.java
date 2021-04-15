@@ -1,6 +1,7 @@
 package cn.edu.whu.metro.controller;
 
 import cn.edu.whu.metro.service.ITripsService;
+import cn.edu.whu.metro.vo.LineSectionFlowVO;
 import cn.edu.whu.metro.vo.StationSectionFlowVO;
 import cn.edu.whu.metro.vo.StationFlowVO;
 import io.swagger.annotations.Api;
@@ -56,15 +57,25 @@ public class MetroFlowController {
         return tripsService.queryStationOutFlow(Timestamp.valueOf(start), Timestamp.valueOf(end), step);
     }
 
-    @ApiOperation("查询某个时间段内某条线路的断面客流")
-    @GetMapping("/metro/line/flow")
-    public List<StationSectionFlowVO> queryLineSectionFlow(
+    @ApiOperation("按站点查询某个时间段内某条线路的断面客流")
+    @GetMapping("/metro/line/station/flow")
+    public List<StationSectionFlowVO> queryStationSectionFlow(
             @RequestParam("step") @ApiParam(value = "线路名称", example = "1号线") String lineName,
             @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
             @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end
             ) {
 
         return tripsService.queryStationSectionFlow(lineName, start, end);
+    }
+
+    @ApiOperation("按线路查询某个时间段内所有线路的断面客流")
+    @GetMapping("/metro/line/flow")
+    public List<LineSectionFlowVO> queryLineSectionFlow(
+            @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+            @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end
+    ) {
+
+        return tripsService.queryLineSectionFlow(start, end);
     }
 
     @ApiOperation("查询某个时间段内所有线路的换乘客流")

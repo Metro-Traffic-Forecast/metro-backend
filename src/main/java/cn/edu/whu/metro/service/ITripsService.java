@@ -112,5 +112,14 @@ public interface ITripsService extends IService<Trips> {
 
 
 
-    List<LineSectionFlowVO> queryLineSectionFlow(String lineName,  LocalDateTime start, LocalDateTime end);
+    /**
+     * 根据时间段按按线路断面客流
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 22:01
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return void
+     **/
+    List<LineSectionFlowVO> queryLineSectionFlow(LocalDateTime start, LocalDateTime end);
 }

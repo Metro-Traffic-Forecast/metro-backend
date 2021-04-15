@@ -1,5 +1,6 @@
 package cn.edu.whu.metro.service.impl;
 
+import cn.edu.whu.metro.dto.LineFlowDTO;
 import cn.edu.whu.metro.dto.StationIdFlowDTO;
 import cn.edu.whu.metro.dto.StationNameFlowDTO;
 import cn.edu.whu.metro.entity.Station;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.security.util.ArrayUtil;
 
+import javax.sound.sampled.Line;
 import java.io.*;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -212,7 +214,6 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
 
     @Override
     public List<StationSectionFlowVO> queryStationSectionFlow(String lineName, LocalDateTime start, LocalDateTime end) {
-        List<StationSectionFlowVO> result = new ArrayList<>();
         // 首先查出所有站点的上行客流
         List<StationNameFlowDTO> upFlow = tripsMapper.queryStationInFlowByLine(lineName, start.toString(), end.toString());
         Map<String, Integer> upFlowCache = upFlow.stream().collect(Collectors.toMap(StationNameFlowDTO::getStationId, StationNameFlowDTO::getFlow));
@@ -223,21 +224,29 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
         // 查出线路的所有站点，按sequence排序
         List<String> stations = stationMapper.selectList(new QueryWrapper<Station>().select("station_id").eq("line_name", lineName).orderByAsc("sequence")).stream().map(Station::getStationId).collect(Collectors.toList());
         // 构造返回结果
-        stations.forEach(
-            station -> {
-                result.add(
-                    new StationSectionFlowVO()
-                        .setStationId(station)
-                        .setInflow(upFlowCache.getOrDefault(station, 0))
-                        .setOutflow(downFlowCache.getOrDefault(station, 0))
-                );
-            }
-        );
-        return result;
+        return stations.stream().map(
+            station -> new StationSectionFlowVO()
+                .setStationId(station)
+                .setInflow(upFlowCache.getOrDefault(station, 0))
+                .setOutflow(downFlowCache.getOrDefault(station, 0))
+        ).collect(Collectors.toList());
     }
 
     @Override
-    public List<LineSectionFlowVO> queryLineSectionFlow(String lineName, LocalDateTime start, LocalDateTime end) {
-        return null;
+    public List<LineSectionFlowVO> queryLineSectionFlow(LocalDateTime start, LocalDateTime end) {
+        // 入站出站客流都是按线路名字典序排序好的
+        List<LineFlowDTO> inFlow = tripsMapper.queryLineInFlowInTimeSlice(start.toString(), end.toString());
+        Map<String, Integer> upFlowCache = inFlow.stream().collect(Collectors.toMap(LineFlowDTO::getLineName, LineFlowDTO::getFlow));
+        List<LineFlowDTO> outFlow = tripsMapper.queryLineOutFlowInTimeSlice(start.toString(), end.toString());
+        Map<String, Integer> downFlowCache = outFlow.stream().collect(Collectors.toMap(LineFlowDTO::getLineName, LineFlowDTO::getFlow));
+
+        List<String> line = stationMapper.queryLineName();
+        return line.stream().map(
+            l -> new LineSectionFlowVO()
+                .setLineName(l)
+                .setInflow(upFlowCache.getOrDefault(l, 0))
+                .setOutflow(downFlowCache.getOrDefault(l, 0))
+        ).collect(Collectors.toList());
+
     }
 }

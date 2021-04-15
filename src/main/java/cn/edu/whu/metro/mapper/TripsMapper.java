@@ -37,8 +37,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     List<StationIdFlowDTO> queryStationInFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -47,8 +47,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     List<StationIdFlowDTO> queryStationOutFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -57,8 +57,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     List<StationFlowVO> queryStationInFlow(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -67,8 +67,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     List<StationFlowVO> queryStationOutFlow(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -78,8 +78,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     List<LineFlowDTO> queryLineInFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -88,8 +88,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     List<LineFlowDTO> queryLineOutFlowInTimeSlice(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -99,8 +99,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     Integer queryLineExchangeFlow(@Param("lineIn") String lineIn, @Param("lineOut") String lineOut, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -110,8 +110,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     List<StationNameFlowDTO> queryStationInFlowByLine(@Param("lineName") String lineName, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -120,8 +120,8 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @author thomas
      * @since 1.0
      * @date 2021/3/28 21:22
-     * @param
-     * @return
+     * @param startTime 起始时间
+     * @param endTime 结束时间
      **/
     List<StationNameFlowDTO> queryStationOutFlowByLine(@Param("lineName") String lineName, @Param("startTime") String startTime, @Param("endTime") String endTime);
 

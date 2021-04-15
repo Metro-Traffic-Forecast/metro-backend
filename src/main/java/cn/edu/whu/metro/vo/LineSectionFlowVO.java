@@ -24,7 +24,7 @@ import lombok.experimental.Accessors;
 public class LineSectionFlowVO {
 
     @ApiModelProperty("线路名")
-    private String stationId;
+    private String lineName;
 
     @ApiModelProperty("上行客流")
     private Integer inflow;
