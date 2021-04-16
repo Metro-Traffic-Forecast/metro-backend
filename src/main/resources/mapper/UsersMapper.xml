@@ -25,4 +25,20 @@
         GROUP BY t.station_out,u.sexual
     </select>
 
+    <select id="ratioOfSexual" resultType="cn.edu.whu.metro.dto.UserSexualDTO">
+        SELECT u.sexual,COUNT(*)
+        FROM
+        trips t, users u
+        WHERE t.user_id=u.id and t.station_in=#{station}
+        GROUP BY u.sexual
+    </select>
+
+    <select id="ratioOfAge" resultType="cn.edu.whu.metro.dto.UserAgeDTO">
+        SELECT u.birth,COUNT(*)
+        FROM
+        trips t, users u
+        WHERE t.user_id=u.id and t.station_in=#{station}
+        GROUP BY u.birth
+    </select>
+
 </mapper>

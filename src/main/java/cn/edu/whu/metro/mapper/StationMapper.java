@@ -25,4 +25,6 @@ public interface StationMapper extends BaseMapper<Station> {
      **/
     List<String> queryLineName();
 
+    List<String> queryStationName();
+
 }

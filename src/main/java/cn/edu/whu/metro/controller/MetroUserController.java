@@ -2,6 +2,7 @@ package cn.edu.whu.metro.controller;
 
 import cn.edu.whu.metro.dto.UserInfoDTO;
 import cn.edu.whu.metro.service.IStationService;
+import cn.edu.whu.metro.service.IUsersService;
 import cn.edu.whu.metro.vo.StationFlowVO;
 import io.micrometer.core.lang.Nullable;
 import io.swagger.annotations.Api;
@@ -28,11 +29,45 @@ public class MetroUserController {
     @Autowired
     IStationService stationService;
 
-    @GetMapping("/metro/user")
+    @Autowired
+    IUsersService usersService;
+
+    @GetMapping("/metro/getNumberByStationAndTime")
     Map<String, List<UserInfoDTO>> test3(@RequestParam @Nullable String station, @RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime){
         Map<String, List<UserInfoDTO>> result = stationService.queryStationPeopleNumber(station,startTime,endTime);
         return result;
     }
+
+    @GetMapping("/metro/sexRatio")
+    Map<String,Float> getSexRatio(@RequestParam String station,@RequestParam Boolean type){
+        Map<String,Float> result;
+        if(type){
+            result = usersService.ratioOfSexual(station);
+        }else {
+            result = usersService.ratioOfSexualI(station);
+        }
+
+        return result;
+    }
+
+    @GetMapping("/metro/ageRatio")
+    List<Map<Integer,Float>> getAgeRatio(@RequestParam String station,@RequestParam Boolean type){
+        List<Map<Integer, Float>> result;
+        if (type){
+            result = usersService.ratioOfAge(station);
+        }
+        else {
+            result = usersService.ratioOfAgeI(station);
+        }
+
+        return result;
+    }
+
+    Map<String,List<Map<Integer,Float>>> getAgeRatioOfAllStation(@RequestParam Boolean type){
+
+    }
+
+
 
 
 }

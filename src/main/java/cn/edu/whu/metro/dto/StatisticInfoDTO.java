@@ -18,6 +18,7 @@ public class StatisticInfoDTO {
 
     private Double standError;
 
+
     public StatisticInfoDTO() {
         average = 0.0;
         standError = 0.0;
