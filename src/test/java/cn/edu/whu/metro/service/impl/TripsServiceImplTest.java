@@ -35,7 +35,7 @@ public class TripsServiceImplTest extends MetroApplicationTest {
 
     @Test
     public void queryFlow() {
-        tripsService.queryStationFlowInTimeSlice(new Timestamp(119, 11, 27, 0, 0, 0, 0), new Timestamp(120, 6, 17, 0, 0, 0, 0), 6);
+        tripsService.queryStationFlowInTimeSlice(new Timestamp(119, 11, 26, 0, 0, 0, 0), new Timestamp(120, 6, 17, 0, 0, 0, 0), 6);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package cn.edu.whu.metro.service;
 
+import cn.edu.whu.metro.dto.UsersProvinceDTO;
 import cn.edu.whu.metro.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -23,5 +24,7 @@ public interface IUsersService extends IService<Users> {
     List<Map<Integer,Float>> ratioOfAge(String station);
 
     List<Map<Integer,Float>> ratioOfAgeI(String station);
+
+    List<UsersProvinceDTO> queryUsersProvince();
 
 }

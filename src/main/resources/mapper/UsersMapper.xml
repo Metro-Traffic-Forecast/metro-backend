@@ -41,4 +41,19 @@
         GROUP BY u.birth
     </select>
 
+    <select id="queryUsersProvince" resultType="cn.edu.whu.metro.dto.UsersProvinceDTO">
+        SELECT
+            id_num.province_full_name AS province_name,
+            id_num.code2 AS province_id,
+            COUNT( users.id ) AS count
+        FROM
+            id_num,
+            users
+        WHERE
+            id_num.code4 = users.province
+        GROUP BY
+            id_num.province_full_name, id_num.code2
+    </select>
+
+
 </mapper>

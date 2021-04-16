@@ -2,6 +2,7 @@ package cn.edu.whu.metro.service.impl;
 
 import cn.edu.whu.metro.dto.UserAgeDTO;
 import cn.edu.whu.metro.dto.UserSexualDTO;
+import cn.edu.whu.metro.dto.UsersProvinceDTO;
 import cn.edu.whu.metro.entity.Users;
 import cn.edu.whu.metro.mapper.UsersMapper;
 import cn.edu.whu.metro.service.IUsersService;
@@ -103,6 +104,11 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             result.add(t);
         }
         return result;
+    }
+
+    @Override
+    public List<UsersProvinceDTO> queryUsersProvince() {
+        return usersMapper.queryUsersProvince();
     }
 
 

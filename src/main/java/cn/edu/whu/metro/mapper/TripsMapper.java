@@ -1,9 +1,6 @@
 package cn.edu.whu.metro.mapper;
 
-import cn.edu.whu.metro.dto.LineFlowDTO;
-import cn.edu.whu.metro.dto.StationIdFlowDTO;
-import cn.edu.whu.metro.dto.StationNameFlowDTO;
-import cn.edu.whu.metro.dto.StatisticInfoDTO;
+import cn.edu.whu.metro.dto.*;
 import cn.edu.whu.metro.entity.Trips;
 import cn.edu.whu.metro.vo.StationFlowVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -124,5 +121,17 @@ public interface TripsMapper extends BaseMapper<Trips> {
      * @param endTime 结束时间
      **/
     List<StationNameFlowDTO> queryStationOutFlowByLine(@Param("lineName") String lineName, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+
+
+    /**
+     * 查询一个时间段内所有站点的营业额
+     * @author thomas
+     * @since 1.0
+     * @date 2021/3/28 21:22
+     * @param startTime 起始时间
+     * @param endTime 结束时间
+     **/
+    List<StationTurnoverDTO> queryStationTurnover(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
 }

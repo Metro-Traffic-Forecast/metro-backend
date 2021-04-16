@@ -3,6 +3,7 @@ package cn.edu.whu.metro.service.impl;
 import cn.edu.whu.metro.dto.LineFlowDTO;
 import cn.edu.whu.metro.dto.StationIdFlowDTO;
 import cn.edu.whu.metro.dto.StationNameFlowDTO;
+import cn.edu.whu.metro.dto.StationTurnoverDTO;
 import cn.edu.whu.metro.entity.Station;
 import cn.edu.whu.metro.entity.Trips;
 import cn.edu.whu.metro.mapper.StationMapper;
@@ -77,18 +78,18 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
                     // 说名trips中的站点不在station列表中 啥也不干
                 }
                 StringBuilder line = new StringBuilder()
-//                        .append(time)
-//                        .append(",")
+                        .append(time)
+                        .append(",")
                         .append(inFlowValue[0])
-//                        .append(",")
-//                        .append(outFlowValue[0])
+                        .append(",")
+                        .append(outFlowValue[0])
                         ;
                 for (int i=1; i<164; i++) {
                     line
                             .append(",")
                             .append(inFlowValue[i])
-//                            .append(",")
-//                            .append(outFlowValue[i])
+                            .append(",")
+                            .append(outFlowValue[i])
                     ;
                 }
                 writer.write(line.toString());
@@ -248,5 +249,10 @@ public class TripsServiceImpl extends ServiceImpl<TripsMapper, Trips> implements
                 .setOutflow(downFlowCache.getOrDefault(l, 0))
         ).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public Map<String, Integer> queryStationTurnover(LocalDateTime start, LocalDateTime end) {
+        return tripsMapper.queryStationTurnover(start.toString(), end.toString()).stream().collect(Collectors.toMap(StationTurnoverDTO::getStationId, o -> o.getTurnover() / 100));
     }
 }

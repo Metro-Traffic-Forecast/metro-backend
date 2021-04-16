@@ -1,5 +1,6 @@
 package cn.edu.whu.metro.service;
 
+import cn.edu.whu.metro.dto.StationTurnoverDTO;
 import cn.edu.whu.metro.entity.Trips;
 import cn.edu.whu.metro.vo.LineSectionFlowVO;
 import cn.edu.whu.metro.vo.StationSectionFlowVO;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -122,4 +124,7 @@ public interface ITripsService extends IService<Trips> {
      * @return void
      **/
     List<LineSectionFlowVO> queryLineSectionFlow(LocalDateTime start, LocalDateTime end);
+
+
+    Map<String, Integer> queryStationTurnover(LocalDateTime start, LocalDateTime end);
 }

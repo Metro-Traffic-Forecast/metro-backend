@@ -156,4 +156,15 @@
             trips.station_out
     </select>
 
+    <select id="queryStationTurnover" resultType="cn.edu.whu.metro.dto.StationTurnoverDTO">
+        SELECT
+            station_in,
+            SUM( trips.price )
+        FROM
+            trips
+        WHERE
+            trips.time_in BETWEEN #{startTime} AND #{endTime}
+        GROUP BY
+            trips.station_in
+    </select>
 </mapper>

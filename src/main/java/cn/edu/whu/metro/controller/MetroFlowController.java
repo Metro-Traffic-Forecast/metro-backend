@@ -1,5 +1,6 @@
 package cn.edu.whu.metro.controller;
 
+import cn.edu.whu.metro.dto.StationTurnoverDTO;
 import cn.edu.whu.metro.service.ITripsService;
 import cn.edu.whu.metro.vo.LineSectionFlowVO;
 import cn.edu.whu.metro.vo.StationSectionFlowVO;
@@ -17,6 +18,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 地铁客流相关控制器
@@ -31,7 +33,6 @@ public class MetroFlowController {
 
     @Autowired
     ITripsService tripsService;
-
 
     @ApiOperation("查询某个时间段内所有站点的入站客流")
     @GetMapping("/metro/station/inflow")
@@ -85,6 +86,16 @@ public class MetroFlowController {
             @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end
             ) {
         return tripsService.queryLineExchangeFlow(start, end);
+    }
+
+
+    @ApiOperation("查询某个时间段内所有站点的营业额")
+    @GetMapping("/metro/station/turnover")
+    public Map<String, Integer>queryStationTurnover(
+            @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+            @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end
+    ) {
+        return tripsService.queryStationTurnover(start, end);
     }
 
 }
