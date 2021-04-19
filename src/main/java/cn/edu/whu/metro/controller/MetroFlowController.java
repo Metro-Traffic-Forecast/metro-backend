@@ -5,6 +5,8 @@ import cn.edu.whu.metro.service.ITripsService;
 import cn.edu.whu.metro.vo.LineSectionFlowVO;
 import cn.edu.whu.metro.vo.StationSectionFlowVO;
 import cn.edu.whu.metro.vo.StationFlowVO;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -96,6 +98,20 @@ public class MetroFlowController {
             @RequestParam("end") @ApiParam(value = "结束时间", example = "2020-01-02 00:00:00") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end
     ) {
         return tripsService.queryStationTurnover(start, end);
+    }
+
+
+    @ApiOperation("查询预测客流")
+    @GetMapping("/metro/prediction/flow")
+    public String queryPredictionFlow(
+            @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") String start
+    ) {
+        //链式构建请求
+        String result = HttpRequest.get("localhost:5000/predict?startTime=" + start)
+                .timeout(20000)//超时，毫秒
+                .execute().body();
+        System.out.println(JSONUtil.parseObj(result).toString());
+        return JSONUtil.parseObj(result).toString();
     }
 
 }
