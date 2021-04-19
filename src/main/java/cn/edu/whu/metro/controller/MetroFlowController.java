@@ -101,10 +101,10 @@ public class MetroFlowController {
     }
 
 
-    @ApiOperation("查询预测客流")
-    @GetMapping("/metro/prediction/flow")
-    public String queryPredictionFlow(
-            @RequestParam("start") @ApiParam(value = "开始时间", example = "2019-12-26 00:00:00") String start
+    @ApiOperation("查询STResNet预测客流 ")
+    @GetMapping("/metro/STResNet/prediction/flow")
+    public String querySTResNetPredictionFlow(
+            @RequestParam("start") @ApiParam(value = "开始时间", example = "2020-06-07 00:00:00") String start
     ) {
         //链式构建请求
         String result = HttpRequest.get("localhost:5000/predict?startTime=" + start)
@@ -114,4 +114,16 @@ public class MetroFlowController {
         return JSONUtil.parseObj(result).toString();
     }
 
+    @ApiOperation("查询ASTGNN预测客流")
+    @GetMapping("/metro/ASTGNN/prediction/flow")
+    public String queryASTGNNPredictionFlow(
+            @RequestParam("start") @ApiParam(value = "开始时间", example = "2020-06-07 00:00:00") String start
+    ) {
+        //链式构建请求
+        String result = HttpRequest.get("localhost:5000/ASTGNN/predict?startTime=" + start)
+                .timeout(20000)//超时，毫秒
+                .execute().body();
+        System.out.println(JSONUtil.parseObj(result).toString());
+        return JSONUtil.parseObj(result).toString();
+    }
 }
